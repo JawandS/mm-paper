@@ -9,6 +9,9 @@ dist/
 build/
 .eggs/
 
+# Reference
+reference_papers/
+
 # Virtual environments
 .venv/
 venv/
