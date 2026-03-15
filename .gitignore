@@ -10,7 +10,7 @@ build/
 .eggs/
 
 # Reference
-reference_papers/
+*.pdf
 
 # Virtual environments
 .venv/
