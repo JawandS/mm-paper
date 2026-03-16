@@ -72,15 +72,19 @@ An undergraduate honors committee in computer science. Assume technical literacy
 
 ## Writing Style
 
-**Voice and person:** First person, used freely. Write as the author of a technical undergraduate report, not as a journal submission.
+**Voice and person:** First person, used freely. Write as the author of a technical undergraduate report, not as a journal submission. Sound like a student describing their own work.
 
 **Tone:** Exploratory and discursive. Build arguments methodically rather than announcing conclusions upfront. Analytical sections should read: context, method, result, implication.
 
-**Sentence length:** Medium. Vary rhythm. Avoid long chains of subordinate clauses and avoid choppy one-liners as filler.
+**Sentence length:** Prefer simple, direct sentences. Break compound-complex constructions into separate sentences. A sequence of short, clear sentences reads better than one long clause-heavy sentence. Vary rhythm but default to simple.
+
+**Concision:** Include only the context that's directly necessary. Establish the minimum background needed to make a point, then move on. Do not elaborate institutional implications or enumerate adjacent problems beyond what the thesis directly needs.
+
+**Perspective:** Frame the problem from the student's point of view when both student and institutional perspectives are available. Institutional consequences (administrative costs, transfer rates) are secondary context.
 
 **Technical concepts:** Explain everything a non-specialist reader would need. Use concrete analogies before formal definitions. Inline figure and table references are preferred over forward references.
 
-**Transitions:** Vary by section. Analytical sections build step by step; the introduction and conclusion can move more freely.
+**Transitions:** Simple connectives ("However," "Therefore,") work fine as sentence starters when they move the argument forward. Analytical sections build step by step; the introduction and conclusion can move more freely.
 
 **Limitations:** Address proportionally to their significance. Do not bury or over-hedge.
 
