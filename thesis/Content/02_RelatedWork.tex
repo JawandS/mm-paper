@@ -1,6 +1,36 @@
 
 \chapter{Related Work}
 
+This thesis presents two major directions of research: the design of MajorMatch, a system for recommending academic majors to students, and the evaluation of text embeddings to be used in major clustering and classification. This chapter surveys related prior work in recommender systems and the basis for the embedding and clustering system implemented.
+
+\section{Program and Major Recommendation Systems}
+
+Selecting what major to study in college is an incredibly important decision for undergraduate students. However, this decision is also difficult. A 2024 survey found that more than half of students changed their major at least once \cite{BERTopic}. Therefore, better tooling around major selection could meaningfully improve the student experience. Previous work has explored a variety of approaches to this problem, including rule-based systems, supervised machine learning, and unsupervised methods.
+
+ == Reviewed until here ==
+
+Some approaches rely on student records. Nearest-neighbor systems match incoming students to majors based on the historical coursework and grades of students who completed each program \cite{BERTopic}. Skills-based systems compare self-reported interests to a taxonomy of skills associated with each major \cite{BERTopic}. Both require either confidential institutional records or a hand-maintained domain ontology, limiting how broadly they can be applied.
+
+The most relevant prior work is TopProRec, introduced by Hill, Goo, and Agarwal \cite{BERTopic}. TopProRec uses BERTopic to mine interest topics from a university's public course catalog. It converts each course description into an embedding, clusters them into topics, and identifies representative keywords for each cluster. Students select topics that match their interests and a backtracking algorithm ranks programs by how heavily those topics appear in their course offerings. In a case study at a polytechnic with 84 programs, 98\% of 65 participants found the recommendations aligned with their interests.
+
+TopProRec demonstrates that course description content can support program recommendation without collecting student data. MajorMatch works from a similar intuition but operates against a standardized national taxonomy of programs rather than a single institution's course catalog. That shift in scope requires the embeddings to generalize across different ways of describing programs, which is part of what this thesis evaluates.
+
+\section{Embeddings as Representations of Semantic Structure}
+
+A text embedding is a dense vector representation of text, where strings with similar meaning end up near each other in the vector space. Mikolov et al. introduced word2vec, which trains a neural network to predict a word's neighbors in a corpus \cite{Mikolov2013Word2Vec}. The key finding is that the resulting vectors encode semantic relationships as geometric directions: v(king) - v(man) + v(woman) approximates v(queen). Modern sentence-level models, including the OpenAI model used in this thesis, extend this to entire passages.
+
+The central question here is how far this structure extends. Peng et al. investigate it for scholarly periodicals by training embeddings for over 20,000 journals from citation co-occurrence sequences, with no discipline labels \cite{neural_embeddings}. KNN classification on the resulting vectors outperforms sparse citation baselines at predicting a journal's academic discipline. The embedding space also contains continuous axes, including a soft-to-hard sciences spectrum that emerged without supervision. This is the closest prior work to this thesis: embedding geometry recovering structure defined by a human-imposed classification of disciplines.
+
+Josiam et al. apply sentence embeddings directly in an educational context, using cosine similarity to match doctoral program outcomes to job postings \cite{embedding_career_map}. Scores above 0.5 identify meaningful alignment, showing that short educational texts carry enough signal for similarity judgments. Mohanty's EduEmbedd takes a contrasting approach, constructing a knowledge graph over course entities and learning vectors from graph triples rather than raw text \cite{edu_knowledge_graph}. This thesis follows the simpler path: embed text directly and ask whether the resulting geometry reflects external taxonomic structure.
+
+\section{The CIP Taxonomy and Clustering Methodology}
+
+The Classification of Instructional Programs (CIP) is a federal taxonomy of academic programs maintained by the National Center for Education Statistics \cite{NCES_CIP2020}. The 2020 edition organizes more than 2,000 six-digit program codes into 47 two-digit subject areas. For example, 11.0101 (Computer and Information Sciences, General) falls under area 11 (Computer and Information Sciences). Universities report enrollment and degree data to the federal government using these codes. NCES assigns them on the basis of academic content using expert judgment, not any computational method.
+
+This independence from NLP is what makes CIP codes useful as a ground truth. If an embedding-based clustering recovers the two-digit area groupings, the recovery reflects genuine semantic structure in the embedding space, not an artifact of the method.
+
+The clustering algorithm used in this thesis is spherical k-means, introduced by Dhillon and Modha \cite{Dhillon2001ConceptDecompositions}. Standard k-means minimizes Euclidean distance. For unit-normalized embedding vectors, the appropriate comparison is cosine similarity, which measures the angle between vectors rather than their Euclidean separation. Spherical k-means adapts the algorithm by normalizing each cluster centroid after every update step, so the clustering consistently minimizes cosine distance throughout.
+
+Cluster quality is measured with three complementary metrics. Purity measures what fraction of items in each cluster share the most common true label. It is easy to interpret but rewards overly fine-grained solutions. Adjusted Rand Index (ARI) measures the fraction of item pairs that are grouped together or kept apart consistently across both clusterings, corrected for chance. It is bounded between -1 and 1, with 0 indicating chance-level agreement. Normalized Mutual Information (NMI) measures how much knowing the cluster assignment reduces uncertainty about the true label, normalized to fall between 0 and 1. Reporting all three gives a fuller picture of how well the recovered clusters match the CIP taxonomy.
+
 \newpage
-
-
