@@ -7,13 +7,9 @@ This thesis presents two major directions of research: the design of MajorMatch,
 
 Selecting what major to study in college is an incredibly important decision for undergraduate students. However, this decision is also difficult. A 2024 survey found that more than half of students changed their major at least once \cite{BERTopic}. Therefore, better tooling around major selection could meaningfully improve the student experience. Previous work has explored a variety of approaches to this problem, including rule-based systems, supervised machine learning, and unsupervised methods.
 
- == Reviewed until here ==
+The most relevant prior work is TopProRec, introduced by Hill, Goo, and Agarwal \cite{BERTopic}. The system works in three phases. First, it uses topic modeling on a university's course catalog to find sets of keywords that represent themes across programs. Second, students select from available keywords. Finally, the system identifies programs with the most overlap between the student's selections and the topics extracted from the course catalog.
 
-Some approaches rely on student records. Nearest-neighbor systems match incoming students to majors based on the historical coursework and grades of students who completed each program \cite{BERTopic}. Skills-based systems compare self-reported interests to a taxonomy of skills associated with each major \cite{BERTopic}. Both require either confidential institutional records or a hand-maintained domain ontology, limiting how broadly they can be applied.
-
-The most relevant prior work is TopProRec, introduced by Hill, Goo, and Agarwal \cite{BERTopic}. TopProRec uses BERTopic to mine interest topics from a university's public course catalog. It converts each course description into an embedding, clusters them into topics, and identifies representative keywords for each cluster. Students select topics that match their interests and a backtracking algorithm ranks programs by how heavily those topics appear in their course offerings. In a case study at a polytechnic with 84 programs, 98\% of 65 participants found the recommendations aligned with their interests.
-
-TopProRec demonstrates that course description content can support program recommendation without collecting student data. MajorMatch works from a similar intuition but operates against a standardized national taxonomy of programs rather than a single institution's course catalog. That shift in scope requires the embeddings to generalize across different ways of describing programs, which is part of what this thesis evaluates.
+TopProRec demonstrates how a recommendation system without prior knowledge of students can still surface meaningful options. In a case study at a polytechnic with 84 programs, 98\% of 65 participants found the recommendations aligned with their interests. Furthermore, the system demonstrates how mining publicly available catalog data can be used to build a meaningful recommendation system customized to a particular institution.
 
 \section{Embeddings as Representations of Semantic Structure}
 
