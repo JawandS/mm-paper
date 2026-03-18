@@ -64,37 +64,36 @@ An undergraduate honors committee in computer science. Assume technical literacy
 
 ## Hard Constraints
 
-- No IRB-collected user data is available; do not imply otherwise
-- Avoid em-dashes entirely
+- No IRB-collected user data -- do not imply otherwise
+- No em-dashes
 - Do not reproduce the core matching algorithm in detail
+- Do not present MajorMatch as the thesis subject -- it is the motivating application
 
 ---
 
 ## Writing Style
 
-**Voice and person:** First person, used freely. Write as the author of a technical undergraduate report, not as a journal submission. Sound like a student describing their own work.
+**Voice:** First person for methodological actions only ("I compare," "I set," "I use"). Not for background, context, or prior work results.
 
-**Tone:** Exploratory and discursive. Build arguments methodically rather than announcing conclusions upfront. Analytical sections should read: context, method, result, implication.
+**Tone:** Direct and confident. State claims without hedging ("might suggest," "appears to," "could potentially indicate" are off-limits). Build arguments step by step; each step is asserted. Analytical sections follow: context, method, result, implication. Frame from the student's perspective. Address limitations proportionally -- no burying, no over-hedging.
 
-**Sentence length:** Prefer simple, direct sentences. Break compound-complex constructions into separate sentences. A sequence of short, clear sentences reads better than one long clause-heavy sentence. Vary rhythm but default to simple.
+**Sentences:** Default to simple and direct. Break compound-complex constructions apart. For mechanistic explanations, use one sentence per step.
 
-**Concision:** Include only the context that's directly necessary. Establish the minimum background needed to make a point, then move on. Do not elaborate institutional implications or enumerate adjacent problems beyond what the thesis directly needs.
+**Concision:** Include only what's directly necessary. Establish minimum background, then move on. Do not elaborate institutional implications or enumerate adjacent problems beyond what the thesis needs.
 
-**Perspective:** Frame the problem from the student's point of view when both student and institutional perspectives are available. Institutional consequences (administrative costs, transfer rates) are secondary context.
+**Numbers:** Always numerals, including small counts ("3 phases," "65 participants"). Percent signs with numerals ("98\%").
 
-**Technical concepts:** Explain everything a non-specialist reader would need. Use concrete analogies before formal definitions. Inline figure and table references are preferred over forward references.
+**Related work:** Each entry: what the paper does → key result with numbers → one sentence naming what it demonstrates for this thesis ("This result demonstrates..., motivating this thesis' work with...").
 
-**Transitions:** Simple connectives ("However," "Therefore,") work fine as sentence starters when they move the argument forward. Analytical sections build step by step; the introduction and conclusion can move more freely.
+**Technical explanations:** Concrete analogy or example before the formal definition. Then one sentence per step.
 
-**Limitations:** Address proportionally to their significance. Do not bury or over-hedge.
-
-**Implications:** Frame practically. Connect findings to what they mean for the research question and for applications like MajorMatch.
+**Verbs:** Active and precise. Prefer "demonstrates," "establishes," "addresses," "motivates," "recovers," "outperforms" over "shows" or "indicates." Passive is acceptable for methodology ("k is set to 23") but not for results or claims.
 
 **Formatting:**
-- No em-dashes (use commas, parentheses, or restructure the sentence)
-- Avoid typical AI writing patterns: do not open sentences with "Notably," "Importantly," "It is worth noting," or similar throat-clearing phrases
-- Prefer active constructions
-- Avoid filler qualifiers ("quite," "rather," "somewhat")
+- No throat-clearing openers: "Notably," "Importantly," "It is worth noting"
+- No filler qualifiers: "quite," "rather," "somewhat"
+- No topic-burying openers: "There are many ways to..." or "It is the case that..."
+- Transitions ("However," "Therefore," "Furthermore") are fine as sentence starters when they advance the argument
 
 ---
 
@@ -111,10 +110,3 @@ An undergraduate honors committee in computer science. Assume technical literacy
 
 ---
 
-## What to Avoid
-
-- Reproducing core matching algorithm details (IP concern)
-- Claiming user study results without IRB data
-- Presenting MajorMatch as the thesis subject rather than the motivating application
-- Em-dashes
-- Generic AI preamble phrases
