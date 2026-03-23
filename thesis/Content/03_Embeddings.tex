@@ -7,29 +7,54 @@
 
 Academic programs are classified in two-digit groupings under the Classification of Instructional Programs (CIP) system. In practice, these groupings can help programs be organized into departments, allow students to look at similar groups of programs, and help identify courses that may have overlap between programs. While programs are categorized numerically they're described with natural language, posing a problem for computational analysis.
 
-Traditional keyword based analysis fail to identify highly similar programs if they use slightly different words. However, more modern embedding based approaches compare the semantic similarity of nautral language without relying solely on the specific words used. Therefore, a new avenue is presented: can embeddings be used to computationally recreate the CIP taxonomy?
+Traditional keyword based analysis fail to identify highly similar programs if they use slightly different words. However, more modern embedding based approaches compare the semantic similarity of natural language without relying solely on the specific words used. Therefore, a new avenue is presented: can embeddings be used to computationally recreate the CIP taxonomy?
 
-The open question is whether this happens in practice. Human taxonomies represent significant human effort and expertise. If the embedding space resembles the CIP taxonomy then it indicates that embeddings of progrma description provide valuble information in the grouping of majors. That result has a direct downstream use: clusters derived from the embedding space can serve as program groupings in the first stage of the MajorMatch matching pipeline, where the system narrows a large program catalog to a semantically coherent candidate set.
+The open question is whether this happens in practice. Human taxonomies represent significant human effort and expertise. If the embedding space resembles the CIP taxonomy then it indicates that embeddings of program description provide valuable information in the grouping of majors. That result has a direct downstream use: clusters derived from the embedding space can serve as program groupings in the first stage of the MajorMatch matching pipeline, where the system narrows a large program catalog to a semantically coherent candidate set.
 
 \section{Dataset and Embedding Construction}
 
-% - 1,264 programs across 23 CIP two-digit areas, embedded using OpenAI text-embedding-3-small; each program represented as a single high-dimensional vector
-% - CIP codes provide a human-defined ground truth: if the embedding space organizes programs consistently with CIP area membership, the representation has captured meaningful semantic structure
+The dataset consists of 1,264 academic programs drawn from the CIP taxonomy, spanning 23 two-digit CIP areas. Each program entry includes a title and a short natural language definition describing the program's focus and content. These definitions are the input to the embedding model.
+
+I embed each program description using OpenAI's \texttt{text-embedding-3-small} model, which maps each definition to a 1,536-dimensional vector. Each program is represented as a single vector, so the full dataset is a matrix of 1,264 points in 1,536-dimensional space.
+
+CIP area membership serves as the ground truth label. The 23 areas are human-defined administrative groupings constructed by domain experts to organize programs by disciplinary similarity. If the embedding space organizes programs consistently with these groupings, the representation has captured meaningful semantic structure.
 
 \section{Clustering Methodology}
 
-% - Spherical k-means with cosine similarity, k=23, evaluated across 100 random seeds and 3 initialization strategies (random, stratified, cip\_mean)
-% - Three complementary metrics -- ARI, NMI, purity -- give a full picture of recovery quality and guard against metric-specific artifacts
+I apply spherical k-means with cosine similarity to the embedding matrix. Spherical k-means is appropriate here because high-dimensional embeddings are more naturally compared by angle than by Euclidean distance; cosine similarity captures directional proximity regardless of vector magnitude. I set k=23, matching the number of two-digit CIP areas, so each predicted cluster can be directly compared to a known human-defined grouping.
+
+Because k-means is sensitive to initialization, I evaluate three initialization strategies. The \textbf{random} strategy selects k programs uniformly at random as initial centroids. The \textbf{stratified} strategy selects one random program from each CIP group, ensuring no group is represented twice in the starting configuration. The \textbf{cip\_mean} strategy initializes each centroid as the normalized mean embedding of a CIP group. Each strategy shows how introducing additional exogenous information improves the clustering relative to the ground truth. The \textbf{cip\_mean} serves as an idealized baseline with a single run, while the other two are run across 100 random seeds.
+
+I then evaluate each clustering run with three metrics: Adjusted Rand Index (ARI), Normalized Mutual Information (NMI), and purity. ARI measures agreement between predicted and true cluster assignments after correcting for chance, with 0 indicating chance-level performance and 1 indicating perfect recovery. NMI measures the mutual information between the two partitions, normalized to [0, 1]. Purity measures the fraction of programs in each cluster that share the majority label. Together, the three metrics guard against artifacts that could flatter any single measure.
 
 \section{Results}
 
-% - Stratified initialization outperforms random; cip\_mean initialization (upper-bound oracle) achieves ARI=0.656, NMI=0.798, purity=0.838
-% - Even random initialization yields ARI=0.424 on average, well above the chance baseline of 0, establishing that the embedding geometry encodes CIP structure without label supervision
+Table~\ref{tab:clustering} reports mean performance across 100 seeds for each initialization strategy, along with the single deterministic cip\_mean run.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lccc}
+\hline
+\textbf{Strategy} & \textbf{ARI} & \textbf{NMI} & \textbf{Purity} \\
+\hline
+Random     & $0.424 \pm 0.032$ & $0.659 \pm 0.020$ & $0.686 \pm 0.025$ \\
+Stratified & $0.477 \pm 0.031$ & $0.688 \pm 0.019$ & $0.719 \pm 0.025$ \\
+CIP mean   & $0.656$           & $0.798$           & $0.838$           \\
+\hline
+\end{tabular}
+\caption{Spherical k-means clustering results (k=23, 100 seeds) evaluated against CIP area labels.}
+\label{tab:clustering}
+\end{table}
+
+Random initialization, which uses no label information, achieves a mean ARI of 0.424 indicating that it beats random chance. Stratified initialization improves on random across all three metrics, with mean ARI rising to 0.477. Seeding one centroid per CIP group reduces the risk that two centroids compete for the same region of the embedding space, producing more consistent recovery across seeds.
+
+The cip\_mean run, initialized directly from the true group means, achieves ARI=0.656, NMI=0.798, and purity=0.838. This serves as an upper-bound since it reflects access to a ground truth not available in practice. The gap between cip\_mean and stratified (ARI +0.179) reflects the ceiling on what better initialization alone could achieve. The remaining gap between stratified and perfect recovery reflects genuine ambiguity in the embedding space where program boundaries are blurry.
 
 \section{Implications for MajorMatch}
 
-% - Strong unsupervised recovery validates embeddings as a representation layer for the recommendation system
-% - Establishes the foundation for the clustering-based stage 1 groupings in Chapter 4
+The results establish that program embeddings are not arbitrary vectors: they carry enough semantic structure to partially recover a human-defined taxonomy without any label supervision. This finding directly motivates the first stage of the MajorMatch pipeline. Rather than presenting a student with a large set of programs, the system narrows the candidate set to a semantically coherent cluster. The clustering results show that these groups are related to ground-truth academic areas, not random partitions, giving the recommendation a defensible starting point.
+
+The imperfect recovery is not purely a liability. Embedding-derived clusters organize programs by semantic similarity in their descriptions, while CIP areas reflect administrative and disciplinary conventions. Where the two diverge, the embedding clusters may capture functional relationships that cross traditional area boundaries. In practice, grouping programs via semantic similarity may serve more valuable for a student navigating by interest, rather than administrative areas.
 
 \newpage
 
