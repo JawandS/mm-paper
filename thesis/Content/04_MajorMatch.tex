@@ -3,6 +3,291 @@
 
 % TODO: expand this chapter
 
+The fundamental goal was to help students who don't know what they want to major in to give them a starting place to explore.
+
+The current version of (https://MajorMatch.me) represents the iteration of 6 version of several months. Feedback included speaking to users for qualitative feedback, considering user retention rates, and quantiative feedback (star ratings, and thumbs up / down). The latest version has been used more than 950 times. 
+
 MajorMatch extends the TopProRec approach by replacing the open-ended topic browsing step with a more structured interest input. Rather than presenting students with a raw list of extracted keywords to sift through, MajorMatch guides them through a set of predefined dimensions that map to concrete aspects of academic programs. This reduces the cognitive burden of the interest elicitation step while preserving the core idea that a student's expressed preferences, not prior behavioral data, drive the recommendations.
+
+The default dataset of MajorMatch includes popular majors accross the US. There are 106 majors spread accross 8 clusters 
+[
+  {
+    "clusterId": 0,
+    "clusterName": "Law, Justice & Public Policy",
+    "summary": "Focuses on how laws, institutions, and public systems shape society, training students to analyze policy, governance, and social justice impacts."
+  },
+  {
+    "clusterId": 1,
+    "clusterName": "Creative Arts & Media",
+    "summary": "Centers on creative expression and storytelling across visual, performing, and digital media, building craft skills and portfolios."
+  },
+  {
+    "clusterId": 2,
+    "clusterName": "Business & Management",
+    "summary": "Prepares students to run organizations through finance, marketing, operations, and leadership with practical, decision-focused skills."
+  },
+  {
+    "clusterId": 3,
+    "clusterName": "Engineering & Technology",
+    "summary": "Applies math and science to design, build, and optimize systems, products, and infrastructure."
+  },
+  {
+    "clusterId": 4,
+    "clusterName": "Health & Behavioral Sciences",
+    "summary": "Explores human health, behavior, and wellbeing with a blend of biological, psychological, and applied clinical practice."
+  },
+  {
+    "clusterId": 5,
+    "clusterName": "Sciences & Mathematics",
+    "summary": "Builds rigorous quantitative and scientific foundations for modeling, experimentation, and data-driven discovery."
+  },
+  {
+    "clusterId": 6,
+    "clusterName": "Education & Teaching",
+    "summary": "Trains future educators to design instruction, support learners, and manage classrooms across age levels."
+  },
+  {
+    "clusterId": 7,
+    "clusterName": "Humanities & Cultural Studies",
+    "summary": "Examines culture, history, language, and ideas to develop critical thinking and communication skills."
+  }
+]
+
+
+MajorMatch works with 3 games (reference /home/js/mm/mm-paper/thesis/Figures):
+- Game 1: Fact or Fiction. Provides binary choice. Each question represents 1 cluster with 8 clusters. Used to filter out clusters the user doesn't like
+- Game 2: This or That. Provides forced binary choice ranking (I prefer X over Y). Indicates which ideas the user is more interesting (e.g.)
+- Stage 1 matching: game 1 + 2 is used to select the top 1-4 clusters for the user
+- Game 3: Select 3. User ranks their top 3 keywords from a set of 8 keywrods
+- Stage 2 matching: game 2 + 3 is used to select up to 3 top programs from each cluster the user matched with in stage 1 with a confidence score for each program
+
+The default dataset uses:
+{
+    "game_one": {
+        "display_name": "Fact or Fuction",
+        "purpose": "Filter out rejected clusters",
+        "questions": [
+            {
+                "id": 0,
+                "content": "⚖️ I want to participate in our systems of power, law, and policy ",
+                "clusterId": 0,
+                "clusterName": "Law, Justice & Public Policy"
+            },
+            {
+                "id": 1,
+                "content": "🎨 I enjoy expressing myself through creative mediums",
+                "clusterId": 1,
+                "clusterName": "Creative Arts & Media"
+            },
+            {
+                "id": 2,
+                "content": "💼 I could see myself working in a corporate setting",
+                "clusterId": 2,
+                "clusterName": "Business & Management"
+            },
+            {
+                "id": 3,
+                "content": "🔧 I want to build and design new things",
+                "clusterId": 3,
+                "clusterName": "Engineering & Technology"
+            },
+            {
+                "id": 4,
+                "content": "❤️ I want to understand how people behave and function",
+                "clusterId": 4,
+                "clusterName": "Health & Behavioral Sciences"
+            },
+            {
+                "id": 5,
+                "content": "🔬 I'm fascinated by how the natural and physical world works",
+                "clusterId": 5,
+                "clusterName": "Sciences & Mathematics"
+            },
+            {
+                "id": 6,
+                "content": "📚 I want to help guide the next generation",
+                "clusterId": 6,
+                "clusterName": "Education & Teaching"
+            },
+            {
+                "id": 7,
+                "content": "🌍 I love analyzing society and culture",
+                "clusterId": 7,
+                "clusterName": "Humanities & Cultural Studies"
+            }
+        ]
+    },
+    "game_two": {
+        "display_name": "This or That",
+        "purpose": "Determine user preferences within accepted clusters",
+        "questions": [
+           {
+            "id": 0,
+            "option_one": { "label": "Subjective", "emoji": "🎨" },
+            "option_two": { "label": "Objective", "emoji": "🔬" }
+           },
+           {
+            "id": 1,
+            "option_one": { "label": "Theoretical", "emoji": "💭" },
+            "option_two": { "label": "Practical", "emoji": "🔧" }
+           },
+           {
+            "id": 2,
+            "option_one": { "label": "People", "emoji": "👥" },
+            "option_two": { "label": "Systems", "emoji": "⚙️" }
+           },
+           {
+            "id": 3,
+            "option_one": { "label": "Details", "emoji": "🔍" },
+            "option_two": { "label": "Big-picture", "emoji": "🌍" }
+           },
+           {
+            "id": 4,
+            "option_one": { "label": "Data-driven", "emoji": "📊" },
+            "option_two": { "label": "Creative", "emoji": "✨" }
+           },
+           {
+            "id": 5,
+            "option_one": { "label": "Response", "emoji": "🚨" },
+            "option_two": { "label": "Prevention", "emoji": "🛡️" }
+           },
+           {
+            "id": 6,
+            "option_one": { "label": "Analyzing media", "emoji": "📱" },
+            "option_two": { "label": "Creating media", "emoji": "🖌️" }
+           },
+           {    
+            "id": 7,
+            "option_one": { "label": "Regulate", "emoji": "🏦" },
+            "option_two": { "label": "Innovate", "emoji": "💡" }
+           },
+           {
+            "id": 8,
+            "option_one": { "label": "Learning", "emoji": "📚" },
+            "option_two": { "label": "Teaching", "emoji": "🌱" }
+           }
+        ]
+    },
+    "game_three": {
+        "display_name": "Capture One",
+        "purpose": "Stage 2 matching, filter specific majors from clusters",
+        "clusters": [
+            {
+                "cluster_id": 0,
+                "cluster_name": "Law, Justice & Public Policy",
+                "options": [
+                    "justice",
+                    "debate",
+                    "analysis",
+                    "policy",
+                    "collaboration",
+                    "leadership",
+                    "advocacy",
+                    "abroad"
+                ]
+            },
+            {
+                "cluster_id": 1,
+                "cluster_name": "Creative Arts & Media",
+                "options": [
+                    "music",
+                    "design",
+                    "writing",
+                    "movies",
+                    "art",
+                    "performance",
+                    "drawing",
+                    "digital"
+                ]
+            },
+            {
+                "cluster_id": 2,
+                "cluster_name": "Business & Management",
+                "options": [
+                    "finance",
+                    "leadership",
+                    "numbers",
+                    "customers",
+                    "organization",
+                    "sales",
+                    "hospitality",
+                    "advertising"
+                ]
+            },
+            {
+                "cluster_id": 3,
+                "cluster_name": "Engineering & Technology",
+                "options": [
+                    "buildings",
+                    "medical",
+                    "programming",
+                    "design",
+                    "hands-on",
+                    "math",
+                    "physics",
+                    "systems"
+                ]
+            },
+            {
+                "cluster_id": 4,
+                "cluster_name": "Health & Behavioral Sciences",
+                "options": [
+                    "behavior",
+                    "chemistry",
+                    "physics",
+                    "sports",
+                    "medicine",
+                    "counseling",
+                    "care",
+                    "health"
+                ]
+            },
+            {
+                "cluster_id": 5,
+                "cluster_name": "Sciences & Mathematics",
+                "options": [
+                    "math",
+                    "biology",
+                    "chemistry",
+                    "physics",
+                    "nature",
+                    "experiments",
+                    "research",
+                    "analysis"
+                ]
+            },
+            {
+                "cluster_id": 6,
+                "cluster_name": "Education & Teaching",
+                "options": [
+                    "students",
+                    "youth",
+                    "arts",
+                    "sports",
+                    "growth",
+                    "mentoring",
+                    "curriculum",
+                    "cultures"
+                ]
+            },
+            {
+                "cluster_id": 7,
+                "cluster_name": "Humanities & Cultural Studies",
+                "options": [
+                    "history",
+                    "culture",
+                    "language",
+                    "ethics",
+                    "writing",
+                    "diversity",
+                    "analysis",
+                    "research"
+                ]
+            }
+        ]
+    }
+}
+
+The core MajorMatch framework has also been extended to custom versions includeing a version with careers and university specific ones that link back to actual catlog offerings. 
 
 \newpage
