@@ -3,8 +3,18 @@
 
 \section{Motivation}
 
+Choosing a college major is one of the most consequential decisions an undergraduate student makes, yet many students change their major. The difficulty is not a lack of interest but a lack of information: students rarely have the background to evaluate dozens of programs across fields they have not studied. Existing recommendation tools address this with structured surveys or rule-based matching systems, but these require students to articulate preferences they may not yet hold.
+
+Text embeddings offer a different approach by converting natural language to a high dimensional numerical vector. Therefore, embeddings represent the semantic content of an academic program without relying on keyword overlap. The open question is whether these representations carry enough structure to be useful computationally. The Classification of Instructional Programs (CIP), a federal taxonomy organizing more than 2,000 academic programs into 48 two-digit subject areas, provides a ready benchmark if embeddings map back to a ground truth. If unsupervised clustering of program embeddings aligns with CIP area assignments, the embedding space has captured genuine disciplinary structure.
+
+MajorMatch (https://majormatch.me/) is a program recommendation system built on this premise. It uses embedding-derived clusters to narrow a large program catalog to a semantically coherent candidate set, then collects lightweight student preferences through a sequence of structured games to produce specific program recommendations. The system has been used more than 950 times and has been extended to university-specific deployments.
+
 \section{Contributions}
 
+This thesis makes two contributions. First, it establishes that OpenAI's \texttt{text-embedding-3-small} model, applied to CIP program descriptions, recovers CIP area structure under unsupervised spherical k-means clustering. Random initialization achieves a mean ARI of 0.424 across 100 seeds; stratified initialization achieves 0.477. Second, it describes MajorMatch, a two-stage recommendation pipeline that uses embedding-derived clusters as the first stage of program matching, reducing student elicitation burden while preserving recommendation relevance.
+
 \section{Organization}
+
+Chapter 2 surveys related work in program recommendation systems, embedding-based semantic representations, and the CIP taxonomy. Chapter 3 presents the embedding validation: dataset construction, clustering methodology, and results against CIP ground truth. Chapter 4 describes the MajorMatch pipeline and how embedding structure powers its first matching stage. Chapter 5 concludes with a summary of findings, limitations, and directions for future work.
 
 \newpage
