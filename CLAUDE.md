@@ -24,17 +24,11 @@ data/               # Pipeline outputs — source of truth for all results
 
 **Core question:** Does embedding geometry spontaneously recover human-defined conceptual structure in academic programs?
 
-The analysis validates embeddings against three independent benchmarks:
+**What is written in the thesis:** The analysis uses one benchmark -- CIP codes. Unsupervised spherical k-means (k=23, cosine similarity, 100 seeds) with three initialization strategies (random, stratified, cip_mean). Key results: random ARI=0.424, stratified ARI=0.477, cip_mean ARI=0.656. Metrics: ARI, NMI, purity. Results in `data/results/unsupervised/`.
 
-1. **CIP codes** (government administrative taxonomy) — unsupervised clustering recovers area structure. Spherical k-means (k=23, cosine similarity, 100 seeds) with three initialization strategies (random, stratified, cip_mean). Metrics: ARI, NMI, purity. Results in `data/results/unsupervised/`.
+**What exists in data but is NOT in the thesis:** Supervised classification benchmark (logistic regression, SVM-RBF, MLP; 5-fold stratified CV). Best result: logistic regression with PCA-95 achieves accuracy=0.925, balanced accuracy=0.918, macro F1=0.913. Results in `data/results/supervised/`. This material has not been written up.
 
-2. **Qualitative major clusterings** (author-defined groupings) — embeddings respect author-perceived conceptual groupings.
-
-3. **LLM-assigned dimension scores** — a large language model scores each program on author-defined dimensions (e.g., quantitative intensity, social orientation); variance explained by a small number of elicited dimensions. Results in `data/results/supervised/`.
-
-The supervised benchmark (logistic regression, SVM-RBF, MLP; 5-fold stratified CV; accuracy, balanced accuracy, macro F1) separately establishes how well embeddings support classification. Results in `data/results/supervised/`.
-
-**MajorMatch's role:** MajorMatch (majormatch.me) is the motivating application, not the thesis subject. It provides practical stakes for the research question. Minimize exposure of matching system internals.
+**MajorMatch's role:** MajorMatch (majormatch.me) is the motivating application, not the thesis subject. It provides practical stakes for the research question. Minimize exposure of matching system internals. As written in Ch4: two-stage pipeline (cluster selection via Games 1+2, program selection via Games 2+3), three games (Fact or Fiction, This or That, Select 3), 106 programs across 8 hand-selected clusters, deployed and iterated 6 times, 950+ uses.
 
 ---
 
@@ -48,7 +42,7 @@ The supervised benchmark (logistic regression, SVM-RBF, MLP; 5-fold stratified C
 | `thesis/Content/04_MajorMatch.tex` | MajorMatch Pipeline | How clustering-derived groupings serve as stage 1 of the MajorMatch matching pipeline; connects Chapter 3's validation to a concrete downstream use |
 | `thesis/Content/05_Conclusion.tex` | Conclusion | Summary of findings, limitations, practical implications, future work |
 
-**Abstract:** `thesis/abstract.tex` — write last, after all chapter content is finalized.
+**Completion status:** All 5 chapters are written. Abstract (`thesis/abstract.tex`) is not yet written -- write last.
 
 **Sections 03 and 04 internal structure:** Problem → Method → Results → Implications
 

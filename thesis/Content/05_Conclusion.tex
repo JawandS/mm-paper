@@ -1,7 +1,19 @@
 
 \chapter{Conclusion}
 
+\section{Summary}
 
+This thesis asked whether embedding geometry spontaneously recovers human-defined conceptual structure in academic programs. The answer is yes, partially and measurably. Spherical k-means applied to OpenAI \texttt{text-embedding-3-small} embeddings of CIP program descriptions recovers the 23-area CIP taxonomy with a mean ARI of 0.424 under random initialization and 0.477 under stratified initialization, well above the chance baseline of 0. An idealized upper bound seeded from true group means reaches ARI=0.656, establishing a ceiling on what label-free clustering can achieve. Together, these results establish that program embeddings are not arbitrary vectors: they encode disciplinary structure without any label supervision.
+
+MajorMatch translates this finding into a practical pipeline. Embedding-derived clusters serve as the first matching stage, narrowing a catalog of 106 programs to a semantically coherent candidate set. The system has been used more than 950 times and extended to university-specific deployments, demonstrating that embedding structure is a viable foundation for low-overhead program recommendation across various institutions.
+
+\section{Limitations and Future Work}
+
+CIP areas are administrative groupings, not ground-truth measures of semantic similarity. Where embedding clusters diverge from CIP, the divergence may reflect genuine functional relationships that cross traditional disciplinary lines rather than clustering failure. Validating against independent taxonomies such as O*NET occupational codes would test whether the structure generalizes beyond CIP.
+
+The validation uses a single embedding model. Evaluating additional models, including fine-tuned variants trained on educational corpora, would establish how sensitive the CIP recovery result is to model choice.
+
+MajorMatch cluster quality is assessed through qualitative feedback and usage volume rather than a controlled user study. The 950-use figure and iterative design process establish engagement but not a causal link between embedding-derived groupings and recommendation relevance. A controlled study measuring recommendation relevance and student satisfaction would move the evaluation beyond engagement metrics.
 
 \newpage
 
