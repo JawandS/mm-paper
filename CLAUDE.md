@@ -81,7 +81,7 @@ An undergraduate honors committee in computer science. Assume technical literacy
 
 **Concision:** Include only what's directly necessary. Establish minimum background, then move on. Do not elaborate institutional implications or enumerate adjacent problems beyond what the thesis needs.
 
-**Numbers:** Always numerals, including small counts ("3 phases," "65 participants"). Percent signs with numerals ("98\%").
+**Numbers:** Spell out small counts (one through nine); use numerals for 10 and above ("two programs," "3 phases" would be "three phases," "65 participants"). Percent signs with numerals ("98\%").
 
 **Related work:** Each entry: what the paper does → key result with numbers → one sentence naming what it demonstrates for this thesis ("This result demonstrates..., motivating this thesis' work with...").
 

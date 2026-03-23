@@ -1,5 +1,35 @@
 
 \chapter{Embeddings}
 
+% Challenge/Gap → Implementation → Benefits structure
+
+\section{The Representation Problem}
+
+Academic programs are classified in two-digit groupings under the Classification of Instructional Programs (CIP) system. In practice, these groupings can help programs be organized into departments, allow students to look at similar groups of programs, and help identify courses that may have overlap between programs. While programs are categorized numerically they're described with natural language, posing a problem for computational analysis.
+
+Traditional keyword based analysis fail to identify highly similar programs if they use slightly different words. However, more modern embedding based approaches compare the semantic similarity of nautral language without relying solely on the specific words used. Therefore, a new avenue is presented: can embeddings be used to computationally recreate the CIP taxonomy?
+
+The open question is whether this happens in practice. Human taxonomies represent significant human effort and expertise. If the embedding space resembles the CIP taxonomy then it indicates that embeddings of progrma description provide valuble information in the grouping of majors. That result has a direct downstream use: clusters derived from the embedding space can serve as program groupings in the first stage of the MajorMatch matching pipeline, where the system narrows a large program catalog to a semantically coherent candidate set.
+
+\section{Dataset and Embedding Construction}
+
+% - 1,264 programs across 23 CIP two-digit areas, embedded using OpenAI text-embedding-3-small; each program represented as a single high-dimensional vector
+% - CIP codes provide a human-defined ground truth: if the embedding space organizes programs consistently with CIP area membership, the representation has captured meaningful semantic structure
+
+\section{Clustering Methodology}
+
+% - Spherical k-means with cosine similarity, k=23, evaluated across 100 random seeds and 3 initialization strategies (random, stratified, cip\_mean)
+% - Three complementary metrics -- ARI, NMI, purity -- give a full picture of recovery quality and guard against metric-specific artifacts
+
+\section{Results}
+
+% - Stratified initialization outperforms random; cip\_mean initialization (upper-bound oracle) achieves ARI=0.656, NMI=0.798, purity=0.838
+% - Even random initialization yields ARI=0.424 on average, well above the chance baseline of 0, establishing that the embedding geometry encodes CIP structure without label supervision
+
+\section{Implications for MajorMatch}
+
+% - Strong unsupervised recovery validates embeddings as a representation layer for the recommendation system
+% - Establishes the foundation for the clustering-based stage 1 groupings in Chapter 4
+
 \newpage
 
