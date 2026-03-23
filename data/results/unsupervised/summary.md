@@ -1,6 +1,6 @@
 # Clustering Results
 
-**k=12, spherical k-means, 100 seeds**
+**k=23, spherical k-means, 100 seeds**
 
 ## Summary
 
