@@ -13,7 +13,7 @@ The open question is whether this happens in practice. Human taxonomies represen
 
 \section{Dataset and Embedding Construction}
 
-The dataset consists of 1,264 academic programs drawn from the CIP taxonomy, spanning 23 two-digit CIP areas. Each program entry includes a title and a short natural language definition describing the program's focus and content. These definitions are the input to the embedding model.
+The full CIP 2020 taxonomy spans 50 two-digit areas. I restrict the analysis to 23 of those areas, excluding residency and apprenticeship programs (areas 60 and 61) and any area with too few qualifying programs to form a meaningful cluster. The resulting dataset contains 1,264 academic programs. Each program entry includes a title and a short natural language definition describing the program's focus and content. These definitions are the input to the embedding model.
 
 I embed each program description using OpenAI's \texttt{text-embedding-3-small} model, which maps each definition to a 1,536-dimensional vector. Each program is represented as a single vector, so the full dataset is a matrix of 1,264 points in 1,536-dimensional space.
 
