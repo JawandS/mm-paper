@@ -1,9 +1,10 @@
+\setlength{\parskip}{0.8em}
 Choosing a college major is difficult because students must evaluate programs across fields they have not studied. This thesis asks whether text embeddings of academic program descriptions spontaneously recover human-defined disciplinary structure, a property that would make them useful for program recommendation.
 
 I embed 1,264 programs from the Classification of Instructional Programs (CIP) taxonomy using OpenAI's \texttt{text-embedding-3-small} model and apply spherical k-means with $k=23$ to match the 23 two-digit CIP areas. Random initialization achieves a mean ARI of 0.424 across 100 seeds; stratified initialization achieves 0.477. An idealized upper bound seeded from true group means reaches ARI=0.656. All results are well above the chance baseline of 0, establishing that the embedding space encodes disciplinary structure without any label supervision.
 
 MajorMatch (\href{https://majormatch.me/}{https://majormatch.me/}) applies this finding in a two-stage program recommendation pipeline. Embedding-derived clusters narrow a 106-program catalog to a semantically coherent candidate set, then three structured games collect student preferences to produce specific recommendations. The system has been used more than 950 times and extended to university-specific deployments, demonstrating that embedding structure is a viable foundation for program recommendation systems.
 
-The code to supplement this paper can be found at: \href{https://github.com/JawandS/mm-research}{https://github.com/JawandS/mm-research}.
+The code to supplement this paper can be found at: \href{https://github.com/JawandS/mm-research}{https://github.com/JawandS/mm-paper}.
 
 \newpage
