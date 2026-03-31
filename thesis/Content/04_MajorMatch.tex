@@ -3,9 +3,9 @@
 
 \section{The Interest Elicitation Problem}
 
-While many existing career and program recommendation systems exist, those commonly used by educational systems require significant effort from the student. In practice, these quizzes, while robust, essentially ask the students to reveal preferences and insights about themselves they may not know. Therefore, the challenge with MajorMatch is to create a system that provides useful program recommendations while minimizing the mental effort on the students' side.
+While many existing career and program recommendation systems exist, those commonly used by educational systems require significant effort from the student. In practice, these quizzes, while robust, essentially ask the students to reveal preferences and insights about themselves they may not know. Therefore, the challenge with MajorMatch is to create a system that provides useful program recommendations while minimizing the mental effort from the student.
 
-For example, MajorMatch extends the TopProRec approach by replacing the open-ended topic browsing step with a more structured interest input. Through a series of three quiz formats (described as games to users) the user is kept engaged while providing valuable data. This approach balances the cognitive load on users, engagement, and value of the data capture. In addition, MajorMatch implements a two stage matching system where users are first matched to clusters of majors.
+For example, MajorMatch diverges from the TopProRec approach by replacing the open-ended topic browsing step with a more structured interest input. Through a series of three quiz formats (described as games) the user is kept engaged while providing valuable data. This approach balances the cognitive load on users, engagement with the quiz, and value of the data capture. In addition, MajorMatch implements a two stage matching system where users are first matched to clusters of majors.
 
 \section{System Design}
 
@@ -47,7 +47,7 @@ The default dataset includes 106 popular majors across the United States, organi
 
 MajorMatch collects student preferences through three games, each serving a distinct role in the matching pipeline.
 
-\textbf{Game 1: Fact or Fiction} presents eight binary statements, one per cluster. Students mark each as true or false for themselves. Any cluster they reject is filtered out of the candidate set. The statements are designed to surface broad alignment with a field (see Appendix~\ref{app:games} for the full list).
+\textbf{Game 1: Fact or Fiction} presents eight binary statements, one per cluster. Students mark each as true or false for themselves. Any cluster they reject is filtered out of the candidate set. The statements are designed to surface broad alignment with a field.
 
 \begin{figure}[H]
     \centering
@@ -56,7 +56,7 @@ MajorMatch collects student preferences through three games, each serving a dist
     \label{fig:game1}
 \end{figure}
 
-\textbf{Game 2: This or That} presents nine forced-choice pairs that capture where a student falls on key academic dimensions. The student picks one option from each pair (see Appendix~\ref{app:games} for the full list).
+\textbf{Game 2: This or That} presents nine forced-choice pairs that capture where a student falls on key academic dimensions. The student picks one option from each pair.
 
 \begin{figure}[H]
     \centering
@@ -65,7 +65,7 @@ MajorMatch collects student preferences through three games, each serving a dist
     \label{fig:game2}
 \end{figure}
 
-\textbf{Game 3: Select 3} presents the student with eight keywords drawn from each of their matched clusters. The student ranks their top 3. The keyword sets are cluster-specific (see Appendix~\ref{app:games} for the full list).
+\textbf{Game 3: Select 3} presents the student with eight cluster-specific keywords for each of their stage 1 matches. The student ranks their top 3 from every keyword set.
 
 \begin{figure}[H]
     \centering
@@ -74,11 +74,13 @@ MajorMatch collects student preferences through three games, each serving a dist
     \label{fig:game3}
 \end{figure}
 
+See Appendix~\ref{app:games} for the full list of questions in each game.
+
 \section{Deployment and Iteration}
 
-The current version of MajorMatch represents the sixth iteration developed over several months. Each revision was driven by qualitative feedback, retention rates, and thumbs up/down responses. The latest version has been used more than 950 times. Timed variants, alternative gamification elements, and alternate question sets were evaluated and discarded across iterations in favor of the current design.
+The current version of MajorMatch represents the sixth iteration developed over several months. Each revision was driven by qualitative feedback, retention rates, and in-app feedback. The latest version has been used more than 1,100 times. Timed variants, alternative gamification elements, and alternate question sets were evaluated and discarded across iterations in favor of the current design.
 
-The core framework has been extended to custom deployments, including a careers-focused variant and university-specific versions that link recommendations back to actual catalog offerings. The embedding analysis in Chapter 3 motivates this extensibility: because program embeddings recover human-defined conceptual groupings, clustering on a new catalog automatically produces a principled starting point for cluster construction without manual labeling. While additional analysis was used in the default dataset, Chapter 3 demonstrates how automatic clustering can provide a meaningful starting point.
+The core framework has been extended to custom deployments, including a careers-focused variant and university-specific versions that link recommendations back to real-world catalog offerings. The embedding analysis in Chapter 3 motivates this extensibility: because program embeddings recover human-defined conceptual groupings, clustering on a new catalog automatically produces a principled starting point for cluster construction without manual labeling. While additional analysis was used in the default dataset, Chapter 3 demonstrates how automatic clustering can provide a meaningful starting point.
 
 The overall goal of MajorMatch is to demonstrate how a recommendation system can reduce elicitation burden without sacrificing relevance. By leveraging embedding structure and LLM capabilities MajorMatch can easily adapt to new datasets with minimal effort while providing valuable recommendations.
 
