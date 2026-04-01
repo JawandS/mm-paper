@@ -1,99 +1,49 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code when working in this repository. The Python pipeline is complete and static. The active work is writing the thesis.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
----
+## Project
 
-## Where Things Live
+Research analysis pipeline for the paper **"Do Embedding-Based Clusters Recover CIP Academic Areas?"** — clusters CIP (Classification of Instructional Programs) program descriptions using OpenAI embeddings and measures cluster quality against 2-digit CIP area ground truth labels (ARI, NMI, purity, silhouette).
 
-```
-thesis/             # LaTeX write-up (compiled via Overleaf)
-  Content/                  # Chapter .tex files
-  Reference/thesis.bib      # All cited references
-  reference_papers/         # PDF and .md versions of cited papers
-data/               # Pipeline outputs — source of truth for all results
-  clean_majors.csv          # 1,264 programs across 23 CIP areas
-  embeddings.json           # OpenAI text-embedding-3-small vectors, keyed by CIPCode
-  results/unsupervised/     # Clustering metrics and summaries
-  results/supervised/       # Classification metrics and summaries
+## Setup
+
+```bash
+cp ../.env .env   # needs OPENAI_API_KEY
+uv sync
 ```
 
----
+## Pipeline Commands
 
-## Research Summary
+The pipeline runs in stages; each stage depends on prior outputs:
 
-**Core question:** Does embedding geometry spontaneously recover human-defined conceptual structure in academic programs?
+```bash
+uv run python 0_prepare/main.py                                             # → data/clean_majors.csv
+uv run python 0_prepare/remove_invalid_cip_codes.py                        # mutates clean_majors.csv + embeddings.json in-place
+uv run python 1_embed/main.py                                              # → data/embeddings.json (resumable)
+uv run python 2a_unsupervised/kmeans.py                                    # → data/results/unsupervised/
+uv run python 2a_unsupervised/cluster_analysis/export_cip_mean_labels.py   # → cip_mean_labels_k12.csv + centroids JSON
+uv run python 2a_unsupervised/cluster_analysis/build_cluster_analysis_md.py # → cluster_analysis.md
+uv run python 2b_supervised/main.py                                        # → data/results/supervised/
+```
 
-**What is written in the thesis:** The analysis uses one benchmark -- CIP codes. Unsupervised spherical k-means (k=23, cosine similarity, 100 seeds) with three initialization strategies (random, stratified, cip_mean). Key results: random ARI=0.424, stratified ARI=0.477, cip_mean ARI=0.656. Metrics: ARI, NMI, purity. Results in `data/results/unsupervised/`.
+## Architecture
 
-**What exists in data but is NOT in the thesis:** Supervised classification benchmark (logistic regression, SVM-RBF, MLP; 5-fold stratified CV). Best result: logistic regression with PCA-95 achieves accuracy=0.925, balanced accuracy=0.918, macro F1=0.913. Results in `data/results/supervised/`. This material has not been written up.
+The repo is a linear research pipeline, not an application:
 
-**MajorMatch's role:** MajorMatch (majormatch.me) is the motivating application, not the thesis subject. It provides practical stakes for the research question. Minimize exposure of matching system internals. As written in Ch4: two-stage pipeline (cluster selection via Games 1+2, program selection via Games 2+3), three games (Fact or Fiction, This or That, Select 3), 106 programs across 8 hand-selected clusters, deployed and iterated 6 times, 950+ uses.
+- **`0_prepare/`** — Filter `CIPCode2020.csv` to 1,264 programs across 23 CIP areas (excludes stubs, residency areas 60/61, reserved/IPEDS-invalid codes)
+- **`1_embed/`** — Embed each program's title + definition using `text-embedding-3-large` (3,072 dims) via OpenAI API; writes incrementally so it can resume
+- **`2a_unsupervised/`** — Spherical k-means with 3 init strategies (random, stratified, cip_mean); tests k=2–30 with 10 seeds; ground truth is 12 2-digit CIP areas
+- **`2b_supervised/`** — Supervised benchmark (logistic regression, SVM RBF, MLP ± PCA) with 5-fold stratified CV for comparison against unsupervised metrics
+- **`thesis/`** — LaTeX source for the paper itself
 
----
+Key data files (not committed if large):
+- `data/embeddings.json` — keyed by CIP code, values are 3,072-dim float arrays
+- `data/clean_majors.csv` — CIP code, 2-digit area, title, definition
+- `data/results/unsupervised/metrics_k12.csv` — per-seed ARI/NMI/purity results
 
-## Thesis Structure
+When `remove_invalid_cip_codes.py` runs, it must keep `clean_majors.csv` and `embeddings.json` in sync (same set of CIP codes in both files).
 
-| File | Section | Content |
-|---|---|---|
-| `thesis/Content/01_Introduction.tex` | Introduction | Motivation, research questions, section overview, MajorMatch as applied context |
-| `thesis/Content/02_RelatedWork.tex` | Related Work | Major/program recommendation systems; embedding-based classification; interpretability in recommender systems |
-| `thesis/Content/03_Embeddings.tex` | Embedding Structure | CIP code comparison — establishes embeddings as a valid representation of academic program structure |
-| `thesis/Content/04_MajorMatch.tex` | MajorMatch Pipeline | How clustering-derived groupings serve as stage 1 of the MajorMatch matching pipeline; connects Chapter 3's validation to a concrete downstream use |
-| `thesis/Content/05_Conclusion.tex` | Conclusion | Summary of findings, limitations, practical implications, future work |
+## Paper Writing
 
-**Completion status:** All 5 chapters are written. Abstract (`thesis/abstract.tex`) is not yet written -- write last.
-
-**Sections 03 and 04 internal structure:** Problem → Method → Results → Implications
-
-**A figure showing how MajorMatch works should appear somewhere in the thesis.**
-
----
-
-## Audience
-
-An undergraduate honors committee in computer science. Assume technical literacy but not specialist familiarity with NLP or recommender systems. All non-obvious concepts should be explained on first use.
-
----
-
-## Hard Constraints
-
-- No IRB-collected user data -- do not imply otherwise
-- No em-dashes
-- Do not reproduce the core matching algorithm in detail
-- Do not present MajorMatch as the thesis subject -- it is the motivating application
-
----
-
-## Writing Style
-
-**Voice:** First person for methodological actions only ("I compare," "I set," "I use"). Not for background, context, or prior work results.
-
-**Tone:** Direct and confident. State claims without hedging ("might suggest," "appears to," "could potentially indicate" are off-limits). Build arguments step by step; each step is asserted. Frame from the student's perspective.
-
-**Limitations:** State the limitation once, where it arises. Immediately follow with what the result still establishes despite it. Do not save limitations for the conclusion. Do not over-hedge by restating them.
-
-**Section openings:** Open each analytical section with the research question that section answers. Do not describe what the section will do ("This section presents..."). State the problem or question directly, then address it.
-
-**Paragraphs:** One point per paragraph. The opening sentence states the claim. Supporting sentences explain the mechanism or evidence. If removing a sentence does not weaken the argument, remove it.
-
-**Sentences:** Default to simple and direct. Break compound-complex constructions apart. For mechanistic explanations, use one sentence per step.
-
-**Results writing:** Lead with the number, then interpret. "Random initialization achieves ARI=0.424, well above the chance baseline of 0" -- not "The chance baseline is 0, and random initialization achieves ARI=0.424." Interpretation follows assertion; mechanism follows claim.
-
-**Concision:** Include only what's directly necessary. Establish minimum background, then move on. Do not elaborate institutional implications or enumerate adjacent problems beyond what the thesis needs. Do not announce what you are about to analyze ("Two patterns warrant attention," "There are several things to note") -- just analyze it.
-
-**Numbers:** Spell out small counts (one through nine); use numerals for 10 and above ("two programs," "65 participants"). Percent signs with numerals ("98\%").
-
-**Related work:** Each entry: what the paper does → key result with numbers → one sentence naming what it demonstrates for this thesis ("This result demonstrates..., motivating this thesis' work with...").
-
-**Technical explanations:** Concrete analogy or example before the formal definition. Then one sentence per step.
-
-**Verbs:** Active and precise. Prefer "demonstrates," "establishes," "addresses," "motivates," "recovers," "outperforms" over "shows" or "indicates." Passive is acceptable for methodology ("k is set to 23") but not for results or claims.
-
-**Formatting:**
-- No throat-clearing openers: "Notably," "Importantly," "It is worth noting"
-- No filler qualifiers: "quite," "rather," "somewhat"
-- No topic-burying openers: "There are many ways to..." or "It is the case that..."
-- No meta-commentary: do not announce what you are about to say or flag that something is interesting before saying it
-- Transitions ("However," "Therefore," "Furthermore") are fine as sentence starters when they advance the argument
+The `thesis/` directory contains the LaTeX paper. Recent git history shows active writing work; the pipeline scripts are mostly stable. The paper's ground truth uses **12 CIP areas** (not 23 — filtered down from the full taxonomy).
